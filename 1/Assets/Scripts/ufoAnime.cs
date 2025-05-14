@@ -41,8 +41,7 @@ public class UfoController : MonoBehaviour
     }
 
     IEnumerator WaitForLaserEndAndFadeInTitle()
-    {
-        Debug.Log("▶ WaitForLaserEnd 시작");   // 이 로그가 찍히는지 콘솔 확인
+    {    
         // 1) “Laser” 상태 진입 대기
         while (!laserAnimator.GetCurrentAnimatorStateInfo(0).IsName("laser"))
             yield return null;
@@ -50,10 +49,9 @@ public class UfoController : MonoBehaviour
         // 2) 애니메이션 끝날 때까지 대기
         while (laserAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
             yield return null;
-        Debug.Log("▶ 애니메이션 재생 완료, 페이드 시작");
+
         // 3) 페이드인 코루틴
         yield return StartCoroutine(FadeCanvasGroup(titleCanvasGroup, 0f, 1f, 0.5f));
-        Debug.Log("▶ 페이드 완료, 인터렉션 활성화");
 
         // 4) 완전히 켜진 뒤에 클릭 활성화
         titleCanvasGroup.interactable   = true;
