@@ -1,101 +1,98 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject[] enemies;
-
-    [SerializeField]
-    private GameObject boss;
+    [SerializeField] private GameObject[] enemies;
+    [SerializeField] private GameObject boss;
 
     private bool isBossSpawned = false;
+    private readonly float[] arrPosX = { -2.1f, -0.6f, 0.6f, 2.1f };
+    [SerializeField] private float spawnInterval = 1f;
 
-    private float[] arrPosX = {-2.1f, -0.6f, 0.6f, 2.1f };
+    // 첫 보스까지 필요한 웨이브 수
+    private int wave = 40;
+    // 보스 격파할 때마다 웨이브 수에 더할 값
+    private int waveIncrease = 5;
+    // 지금까지 격파한 보스 수 (다음 사이클 enemyIndex 초기값으로 사용)
+    private int bossClearCount = 0;
 
-    [SerializeField]
-    private float spawnInterval = 1f;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
-        StartEnemyRoutine();
+        StartCoroutine(EnemyRoutine());
     }
 
-    void StartEnemyRoutine() {
-        StartCoroutine("EnemyRoutine");
+    public void StopEnemyRoutine()
+    {
+        StopCoroutine(EnemyRoutine());
     }
 
-    public void StopEnemyRoutine() {
-        StopCoroutine("EnemyRoutine");
-    } 
-
-    IEnumerator EnemyRoutine() {
+    private IEnumerator EnemyRoutine()
+    {
         yield return new WaitForSeconds(3f);
 
         float moveSpeed = 1f;
         int spawnCount = 0;
-        int enemyIndex = 0;
+        int enemyIndex = 0; // 스폰 가능한 최대 적 인덱스
 
-        while (true) {
-
-            if (isBossSpawned) {
-                        // 보스가 등장했으면 코루틴 종료
-                        yield break;
-                    }
-
-            foreach (float posX in arrPosX) {
+        while (true)
+        {
+            // 한 웨이브(4방향) 스폰
+            foreach (float posX in arrPosX)
+            {
                 SpawnEnemy(posX, enemyIndex, moveSpeed);
-
-                // 0 ~ 2초 사이 랜덤 대기
-                float randomDelay = Random.Range(0f, 2f);
-                yield return new WaitForSeconds(randomDelay);
-
+                yield return new WaitForSeconds(Random.Range(0f, 2f));
             }
 
             spawnCount++;
-            if (spawnCount % 5 == 0) { // 5 , 10, 15, ....
-                enemyIndex += 1;
+
+            // 10의 배수 웨이브마다 적 레벨(인덱스) +1, 속도 증가
+            if (spawnCount % 10 == 0)
+            {
+                enemyIndex++;
                 moveSpeed += 0.5f;
             }
 
-            if (enemyIndex >= enemies.Length) {
+            // 보스 소환 조건: 웨이브 수가 기준 이상이고, 아직 보스가 없을 때
+            if (!isBossSpawned && spawnCount >= wave)
+            {
                 SpawnBoss();
 
-                // 보스 스폰 후 약간 대기
-                //yield return new WaitForSeconds(2f);
+                // 보스가 씬에서 완전히 사라질 때까지 대기
+                yield return new WaitUntil(() =>
+                    GameObject.FindGameObjectsWithTag("Boss").Length == 0
+                );
 
+                isBossSpawned = false;
+
+                // 보스 격파 후 처리
+                bossClearCount++;            // 다음 사이클 시작 enemyIndex = bossClearCount
+                enemyIndex = bossClearCount; // 초기화
+                wave += waveIncrease;        // 다음 보스까지 필요한 웨이브 수 +5
+                spawnCount = 0;              // 웨이브 카운트 리셋
+
+                yield return new WaitForSeconds(2f);
+                continue;
             }
 
             yield return new WaitForSeconds(spawnInterval);
         }
     }
 
-    void SpawnEnemy(float posX, int currentMaxIndex, float moveSpeed) {
+    private void SpawnEnemy(float posX, int currentMaxIndex, float moveSpeed)
+    {
         Vector3 spawnPos = new Vector3(posX, transform.position.y, transform.position.z);
-
-        // if (Random.Range(0, 4) == 0) { // 무기를 자리마다 랜덤으로 소환
-        //     index += 1;
-        // }
-
-        // if (index >= enemies.Length) {
-        //     index = enemies.Length -1;
-        // }
-
-        int randomIndex = Random.Range(0, currentMaxIndex + 1); // 0부터 currentMaxIndex까지 랜덤
-
-        // 배열 범위 넘지 않게 방어
+        int randomIndex = Random.Range(0, currentMaxIndex + 1);
         randomIndex = Mathf.Clamp(randomIndex, 0, enemies.Length - 1);
 
         GameObject enemyObject = Instantiate(enemies[randomIndex], spawnPos, Quaternion.identity);
-        Enemy enemy = enemyObject.GetComponent<Enemy>();
-        enemy.SetMoveSpeed(moveSpeed);
+        if (enemyObject.TryGetComponent<Enemy>(out var enemy))
+            enemy.SetMoveSpeed(moveSpeed);
     }
 
-    void SpawnBoss() {
+    private void SpawnBoss()
+    {
         Instantiate(boss, transform.position, Quaternion.identity);
-        isBossSpawned = true; // 보스가 등장했음을 기록
+        isBossSpawned = true;
     }
 }

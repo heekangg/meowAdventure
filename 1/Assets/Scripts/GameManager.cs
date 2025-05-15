@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject gameOverPanel;
 
+
     [SerializeField] private Slider bossHpSlider; // 추가!
 
     [SerializeField] public GameObject coinPrefab;
@@ -56,9 +57,11 @@ public class GameManager : MonoBehaviour
 
     }
 
-    
 
-    
+    void ShowGameOverPanel() {
+        gameOverPanel.SetActive(true);
+    }
+
     public void PlayAgain() {
         SceneManager.LoadScene("Stage1");
     }
