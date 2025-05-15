@@ -111,7 +111,6 @@ public class Boss : MonoBehaviour
         GameManager.instance.HideBossHpBar(); // 보스 죽을 때 체력바 숨기기
         SpawnCoins();
         Destroy(gameObject);
-        GameManager.instance.SetGameClear();
     }
 
     private void SpawnCoins() {

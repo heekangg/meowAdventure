@@ -15,8 +15,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject gameOverPanel;
 
-    [SerializeField] private GameObject gameClearPanel;
-
     [SerializeField] private Slider bossHpSlider; // 추가!
 
     [SerializeField] public GameObject coinPrefab;
@@ -58,27 +56,9 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void SetGameClear() {
-        isGameOVer = true; // 게임 진행 멈추기
+    
 
-        EnemySpawner enemySpawner = FindFirstObjectByType<EnemySpawner>();
-        if (enemySpawner != null) {
-            enemySpawner.StopEnemyRoutine();
-        }
-
-        SaveCoin(); // 보상 저장 (코인 저장)
-
-        Invoke("ShowGameClearPanel", 2f); // 2초 후 클리어 패널 띄우기
-    }
-
-    private void ShowGameClearPanel() {
-        gameClearPanel.SetActive(true);
-    }
-
-    void ShowGameOverPanel() {
-        gameOverPanel.SetActive(true);
-    }
-
+    
     public void PlayAgain() {
         SceneManager.LoadScene("Stage1");
     }
