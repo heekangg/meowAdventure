@@ -51,6 +51,11 @@ public class GameManager : MonoBehaviour
             enemySpawner.StopEnemyRoutine();
         }
 
+        DebrisSpawner debrisSpawner = FindFirstObjectByType<DebrisSpawner>();
+        if (enemySpawner != null) {
+            debrisSpawner.StopDebrisRoutine();
+        }
+
         SaveCoin();
         Invoke("ShowGameOverPanel", 1f); // 1초뒤에 게임오버패널을 띄어줌
         HideBossHpBar();

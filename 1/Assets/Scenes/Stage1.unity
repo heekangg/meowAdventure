@@ -2422,6 +2422,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1271942238}
   - component: {fileID: 1271942237}
+  - component: {fileID: 1271942239}
   m_Layer: 0
   m_Name: EnemySpawner
   m_TagString: Untagged
@@ -2463,6 +2464,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1271942239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1271942236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95714960c4bfec346b9f94f16328fc0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debrisPrefab: {fileID: 2681346255357031872, guid: 2a6cc0d5bcf418a4896e3256ca5e3867, type: 3}
+  moveSpeed: 10
+  minInterval: 5
+  maxInterval: 10
 --- !u!1 &1283697483
 GameObject:
   m_ObjectHideFlags: 0
@@ -4160,7 +4177,6 @@ MonoBehaviour:
   pauseMenuPanel: {fileID: 403427950}
   confirmPanel: {fileID: 1529399897}
   gameOverPanel: {fileID: 1918913343}
-  gameClearPanel: {fileID: 0}
   bossHpSlider: {fileID: 282982388}
   coinPrefab: {fileID: 5678238582407524945, guid: d28b881d918ba5849a651b990827249f, type: 3}
   isGameOVer: 0

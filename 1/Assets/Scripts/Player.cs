@@ -19,19 +19,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // 키보드로 좌 우 움직이기 코드1
-        // float horizontalInput = Input.GetAxisRaw("Horizontal");
-        // float verticalInput = Input.GetAxisRaw("Vertical");
-        // Vector3 moveTo = new Vector3(horizontalInput, 0f, 0f);
-        // transform.position += moveTo * moveSpeed * Time.deltaTime;
 
-        // 키보드로 좌 우 움직이기 코드2
-        // Vector3 moveTo = new Vector3(moveSpeed * Time.deltaTime, 0, 0);
-        // if (Input.GetKey(KeyCode.LeftArrow)) {
-        //     transform.position -= moveTo;
-        // } else if (Input.GetKey(KeyCode.RightArrow)) {
-        //     transform.position += moveTo;
-        // }
         if (Time.timeScale == 0f) return;
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); // 위치값을 카메라 기준으로 바꿔주는 코드
         float toX = Mathf.Clamp(mousePos.x, -2.35f, 2.35f); // 마우스가 일정 좌표로 나가면 플레이어가 마우스를 안따라감
@@ -57,7 +45,7 @@ public class Player : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        if (other.gameObject.tag == "Enemy" || other.gameObject.tag == "BossWeapon") {
+        if (other.gameObject.tag == "Enemy" || other.gameObject.tag == "BossWeapon" || other.gameObject.tag == "Debris") {
             GameManager.instance.SetGameOver();
             Destroy(gameObject);
         } else if (other.gameObject.tag == "Coin") {
