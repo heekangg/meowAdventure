@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] private GameObject explodingEffect;
     [SerializeField]
     private GameObject coin;
 
@@ -35,6 +36,10 @@ public class Enemy : MonoBehaviour
                 // if (gameObject.tag == "Boss") {  //보스를 enemy.cs에서 제거하고 boss.cs로 따로 관리
                 //     GameManager.instance.SetGameOver();
                 // }
+                if (explodingEffect != null) {
+                    GameObject fx = Instantiate(explodingEffect, transform.position, Quaternion.identity);
+                    Destroy(fx, 1f);
+                }
                 Destroy(gameObject);
                 Instantiate(coin, transform.position, Quaternion.identity);
             }

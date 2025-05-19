@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1956566823614217981
 Transform:
   m_ObjectHideFlags: 0
@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c4d8fce0d9a20a43a2015bf5de0d1fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  explodingEffect: {fileID: 4801185326682452682, guid: e87494778e374b547b9f983457caa773, type: 3}
   coin: {fileID: 5678238582407524945, guid: d28b881d918ba5849a651b990827249f, type: 3}
   moveSpeed: 1
   hp: 5
