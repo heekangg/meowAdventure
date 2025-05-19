@@ -15,7 +15,7 @@ public class DebrisSpawner : MonoBehaviour
     [SerializeField] private float initialDelay = 20f;
 
     // EnemySpawner와 동일한 X 좌표 네 방향
-    private readonly float[] arrPosX = { -2.1f, -0.6f, 0.6f, 2.1f };
+    private readonly float[] arrPosX = { -2.1f, -0.7f, 0.7f, 2.1f };
 
 
 

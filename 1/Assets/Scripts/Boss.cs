@@ -5,6 +5,7 @@ using System.Collections;
 public class Boss : MonoBehaviour
 {
     [SerializeField] private float maxHp = 300f;
+    [SerializeField] private GameObject explodingEffect;
 
     //보스패턴1 유도탄
     [SerializeField] private GameObject bossWeaponPrefab; // Boss 무기 프리팹 연결
@@ -108,7 +109,13 @@ public class Boss : MonoBehaviour
 
     private void Die()
     {
-        GameManager.instance.HideBossHpBar(); // 보스 죽을 때 체력바 숨기기
+        if (explodingEffect != null) {
+                GameObject fx = Instantiate(explodingEffect, transform.position, Quaternion.identity);
+                fx.transform.localScale = new Vector3(2f, 2f, 2f);
+                Destroy(fx, 1f);
+            }
+        GameManager.instance.HideBossHpBar();
+         // 보스 죽을 때 체력바 숨기기
         SpawnCoins();
         Destroy(gameObject);
     }

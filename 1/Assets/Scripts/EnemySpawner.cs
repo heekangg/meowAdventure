@@ -7,7 +7,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private GameObject boss;
 
     private bool isBossSpawned = false;
-    private readonly float[] arrPosX = { -2.1f, -0.6f, 0.6f, 2.1f };
+    private readonly float[] arrPosX = { -2.1f, -0.7f, 0.7f, 2.1f };
     [SerializeField] private float spawnInterval = 1f;
 
     // 첫 보스까지 필요한 웨이브 수
