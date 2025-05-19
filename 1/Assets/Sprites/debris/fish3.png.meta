@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 1fdd764a0333a4a4e88eb21dc3086117
+guid: c837b0f1272b9f7449ec257e284c6150
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8363459815143543935
-    second: weapon 2_0
+      213: -6888898294195568640
+    second: fish3_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 600
+  spritePixelsToUnits: 450
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -139,23 +139,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: weapon 2_0
+      name: fish3_0
       rect:
         serializedVersion: 2
-        x: 44
-        y: 54
-        width: 285
-        height: 268
+        x: 0
+        y: 0
+        width: 579
+        height: 1422
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 18b6d111c950feb80800000000000000
-      internalID: -8363459815143543935
+      spriteID: 000cda81087b560a0800000000000000
+      internalID: -6888898294195568640
       vertices: []
       indices: 
       edges: []
@@ -164,7 +164,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 60bdef3a9d1133340a5af2da95aa832f
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      weapon 2_0: -8363459815143543935
+      fish3_0: -6888898294195568640
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
