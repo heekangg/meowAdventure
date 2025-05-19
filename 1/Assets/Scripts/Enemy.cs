@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Enemy : MonoBehaviour
 {
@@ -52,6 +53,8 @@ public class Enemy : MonoBehaviour
             Weapon weapon = other.gameObject.GetComponent<Weapon>();
             hp -= weapon.damage;
 
+            StartCoroutine(Shake());
+
             UpdateColor();
             if (hp <= 0) {
                 // if (gameObject.tag == "Boss") {  //보스를 enemy.cs에서 제거하고 boss.cs로 따로 관리
@@ -80,5 +83,40 @@ public class Enemy : MonoBehaviour
         
     }
 
+     private IEnumerator Shake()
+    {
+        float originalPos = transform.position.x;
+        float elapsed = 0f;
+
+        while (elapsed < 0.1f)
+        {
+            float offsetX = Random.Range(-0.1f, 0.1f);
+            transform.position = new Vector3(transform.position.x + offsetX, transform.position.y, transform.position.z);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = new Vector3 (originalPos, transform.position.y, transform.position.z);
+    }
+
 }
+
+// private IEnumerator Shake()
+//     {
+
+//         Vector3 originalPos = transform.position;
+//         float elapsed = 0f;
+
+//         while (elapsed < 0.1f)
+//         {
+//             float offsetX = Random.Range(-0.1f, 0.1f);
+//             transform.position = new Vector3(
+//                 originalPos.x + offsetX,
+//                 originalPos.y,
+//                 originalPos.z
+//             );
+
+//             elapsed += Time.deltaTime;
+//             yield return null;
+//         }
 
