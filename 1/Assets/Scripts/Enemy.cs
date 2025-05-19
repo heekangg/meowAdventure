@@ -20,7 +20,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Color[] damageColors = new Color[4]
     {
         Color.white,
-        new Color(1f, 0.8f, 0.8f), // 살짝 붉은 단계
+        new Color(1f, 0.8f, 0.8f),
         new Color(1f, 0.6f, 0.6f),
         new Color(1f, 0.4f, 0.4f)
     };
@@ -90,7 +90,7 @@ public class Enemy : MonoBehaviour
 
         while (elapsed < 0.1f)
         {
-            float offsetX = Random.Range(-0.1f, 0.1f);
+            float offsetX = Random.Range(-0.05f, 0.05f);
             transform.position = new Vector3(transform.position.x + offsetX, transform.position.y, transform.position.z);
 
             elapsed += Time.deltaTime;
@@ -101,22 +101,5 @@ public class Enemy : MonoBehaviour
 
 }
 
-// private IEnumerator Shake()
-//     {
 
-//         Vector3 originalPos = transform.position;
-//         float elapsed = 0f;
-
-//         while (elapsed < 0.1f)
-//         {
-//             float offsetX = Random.Range(-0.1f, 0.1f);
-//             transform.position = new Vector3(
-//                 originalPos.x + offsetX,
-//                 originalPos.y,
-//                 originalPos.z
-//             );
-
-//             elapsed += Time.deltaTime;
-//             yield return null;
-//         }
 

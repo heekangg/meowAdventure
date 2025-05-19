@@ -19,8 +19,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Slider bossHpSlider; // 추가!
 
     [SerializeField] public GameObject coinPrefab;
+    [SerializeField] private TMPro.TextMeshProUGUI distanceText;
 
-    private int coin = 0;
+    private int coin = 0;  // UI 텍스트
+    private float totalDistance = 0f;  // Meter 단위
+
 
     [HideInInspector] public bool isGameOVer = false;
 
@@ -28,6 +31,11 @@ public class GameManager : MonoBehaviour
         if (instance == null) {
             instance = this;
         }
+    }
+
+    public void AddDistance(float meters) {
+        totalDistance += meters;
+        distanceText.SetText($"{Mathf.FloorToInt(totalDistance)} m");
     }
 
     public void IncreaseCoin() {
