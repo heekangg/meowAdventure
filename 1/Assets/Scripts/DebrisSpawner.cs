@@ -51,6 +51,9 @@ public class DebrisSpawner : MonoBehaviour
             float wait = Random.Range(minInterval, maxInterval);
             yield return new WaitForSeconds(wait);
 
+            if (GameObject.FindGameObjectsWithTag("Boss").Length > 0)
+            continue;  // 보스가 있으면 이번 사이클 건너뛰기
+
             // 4) 파편 스폰
             float x = arrPosX[Random.Range(0, arrPosX.Length)];
             Vector3 spawnPos = new Vector3(x, transform.position.y, 0f);

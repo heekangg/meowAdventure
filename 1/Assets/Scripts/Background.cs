@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Background : MonoBehaviour
 {
-    private float moveSpeed = 3f;
+    private float moveSpeed = 5f;
 
     // Update is called once per frame
     void Update()
