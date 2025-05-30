@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
 
     public void IncreaseCoin() {
         coin += 1;
-        text.SetText(coin.ToString());
+        text.SetText( AbbreviateNumber(coin) );
 
     }
 
@@ -49,6 +49,17 @@ public class GameManager : MonoBehaviour
     totalCoin += coin; // 현재 플레이에서 모은 코인을 더한다
     PlayerPrefs.SetInt("TotalCoin", totalCoin);
     PlayerPrefs.Save();
+    }
+
+    public static string AbbreviateNumber(long num)
+    {
+        if (num >= 1_000_000_000)
+            return (num / 1_000_000_000f).ToString("0.#") + "B";
+        if (num >= 1_000_000)
+            return (num / 1_000_000f).ToString("0.#") + "M";
+        if (num >= 1_000)
+            return (num / 1_000f).ToString("0.#") + "K";
+        return num.ToString();
     }
 
     public void SetGameOver() {

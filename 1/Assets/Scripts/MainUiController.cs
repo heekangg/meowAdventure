@@ -39,7 +39,7 @@ public class MainUiController : MonoBehaviour
     void Start()
     {
         int totalCoin = PlayerPrefs.GetInt("TotalCoin", 0);
-        totalCoinText.text = totalCoin.ToString(); // 메인메뉴에 표시
+        totalCoinText.text = GameManager.AbbreviateNumber(totalCoin);
     }
 
     // Update is called once per frame

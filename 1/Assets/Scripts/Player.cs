@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private float shootInterval = 0.05f;
+
+    [SerializeField] private Animator animator;
     private float lastShotTime = 0f;
     // Update is called once per frame
     void Update()
@@ -24,6 +26,11 @@ public class Player : MonoBehaviour
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); // 위치값을 카메라 기준으로 바꿔주는 코드
         float toX = Mathf.Clamp(mousePos.x, -2.35f, 2.35f); // 마우스가 일정 좌표로 나가면 플레이어가 마우스를 안따라감
         transform.position = new Vector3(toX, transform.position.y, transform.position.z);
+
+        // 2) 카메라 중앙 기준 좌우 비교 → 애니메이션 파라미터 설정
+        float camCenterX = Camera.main.transform.position.x;
+        bool isLeft = transform.position.x < camCenterX;
+        animator.SetBool("IsLeft", isLeft);
 
         if (GameManager.instance.isGameOVer == false) {
             Shoot();
