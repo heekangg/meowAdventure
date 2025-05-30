@@ -4,18 +4,15 @@ using System.Collections;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private GameObject explodingEffect;
-    [SerializeField]
-    private GameObject coin;
+    [SerializeField] private GameObject coin;
 
-    [SerializeField]
-    private float moveSpeed = 10f;
-
-
+    [SerializeField] private float moveSpeed = 10f;
     private float minY = -7f;
 
-    [SerializeField]
-    private float hp = 1f;
+    [SerializeField] private float hp = 1f;
     private float maxHp;
+
+    [SerializeField] private int scoreValue = 5; //점수
 
     [SerializeField] private Color[] damageColors = new Color[4]
     {
@@ -60,6 +57,11 @@ public class Enemy : MonoBehaviour
                 // if (gameObject.tag == "Boss") {  //보스를 enemy.cs에서 제거하고 boss.cs로 따로 관리
                 //     GameManager.instance.SetGameOver();
                 // }
+
+                // 1) 점수 추가
+                if (GameManager.instance != null)
+                    GameManager.instance.AddScore(scoreValue);
+
                 if (explodingEffect != null) {
                     GameObject fx = Instantiate(explodingEffect, transform.position, Quaternion.identity);
                     Destroy(fx, 1f);

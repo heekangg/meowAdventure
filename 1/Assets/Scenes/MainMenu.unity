@@ -2575,6 +2575,7 @@ MonoBehaviour:
   characterPanel: {fileID: 0}
   optionsPanel: {fileID: 0}
   totalCoinText: {fileID: 1788307549}
+  highScoreText: {fileID: 2080830638}
 --- !u!4 &919979747
 Transform:
   m_ObjectHideFlags: 0

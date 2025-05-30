@@ -6,6 +6,7 @@ public class Boss : MonoBehaviour
 {
     [SerializeField] private float maxHp = 300f;
     [SerializeField] private GameObject explodingEffect;
+    [SerializeField] private int scoreValue = 5; //점수
 
     //보스패턴1 유도탄
     [SerializeField] private GameObject bossWeaponPrefab; // Boss 무기 프리팹 연결
@@ -103,6 +104,9 @@ public class Boss : MonoBehaviour
 
         if (currentHp <= 0)
         {
+            // 1) 점수 추가
+            if (GameManager.instance != null)
+                GameManager.instance.AddScore(scoreValue);
             Die();
         }
     }

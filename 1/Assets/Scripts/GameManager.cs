@@ -7,141 +7,196 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
 
-    [SerializeField] private TextMeshProUGUI text;
+    [Header("UI References")]
+    [SerializeField] private TextMeshProUGUI text;           // 기존 코인 텍스트
+    [SerializeField] private TextMeshProUGUI scoreText;      // 추가: 점수 텍스트
+    [SerializeField] private TextMeshProUGUI distanceText;
 
+    [Header("Panels & Prefabs")]
     [SerializeField] private GameObject pauseMenuPanel;
-
     [SerializeField] private GameObject confirmPanel;
-
     [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private Slider      bossHpSlider;
+    [SerializeField] public  GameObject coinPrefab;
 
+    // 내부 상태
+    private int   coin             = 0;     // 획득 코인 수
+    private int   score            = 0;     // 누적 점수
+    private float totalDistance    = 0f;    // 누적 이동 거리
+    private int   lastDistanceInt  = 0;     // 거리 점수 계산용
 
-    [SerializeField] private Slider bossHpSlider; // 추가!
-
-    [SerializeField] public GameObject coinPrefab;
-    [SerializeField] private TMPro.TextMeshProUGUI distanceText;
-
-    private int coin = 0;  // UI 텍스트
-    private float totalDistance = 0f;  // Meter 단위
-
+    private float scoreTimer = 0f;
+    private const float SCORE_INTERVAL = 0.1f;
 
     [HideInInspector] public bool isGameOVer = false;
 
-    void Awake() {
-        if (instance == null) {
-            instance = this;
+    void Awake()
+    {
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
+    }
+
+    void Start()
+    {
+        // 초기 UI 세팅
+        UpdateCoinUI();
+        UpdateScoreUI();
+        distanceText.SetText("0 m");
+        bossHpSlider.gameObject.SetActive(false);
+    }
+
+     void Update()
+    {
+        // 0.1초마다 real score에 +1점
+        scoreTimer += Time.deltaTime;
+        if (scoreTimer >= SCORE_INTERVAL)
+        {
+            scoreTimer -= SCORE_INTERVAL;
+            AddScore(1);
         }
     }
 
-    public void AddDistance(float meters) {
+    public void AddDistance(float meters)
+    {
         totalDistance += meters;
-        distanceText.SetText($"{Mathf.FloorToInt(totalDistance)} m");
+        int floorDist = Mathf.FloorToInt(totalDistance);
+        distanceText.SetText($"{floorDist} m");
+
+        int delta = floorDist - lastDistanceInt;
+        if (delta > 0)
+        {
+            AddScore(delta * 10);   // 거리 m당 10점
+            lastDistanceInt = floorDist;
+        }
     }
 
-    public void IncreaseCoin() {
+    /// 코인 획득 처리 (1개당 10점)
+    public void IncreaseCoin()
+    {
         coin += 1;
-        text.SetText( AbbreviateNumber(coin) );
-
+        AddScore(10);             // 코인 1개당 10점
+        UpdateCoinUI();
     }
 
-    public void SaveCoin() {
-    int totalCoin = PlayerPrefs.GetInt("TotalCoin", 0);
-    totalCoin += coin; // 현재 플레이에서 모은 코인을 더한다
-    PlayerPrefs.SetInt("TotalCoin", totalCoin);
-    PlayerPrefs.Save();
+    public void AddScore(int amount)
+    {
+        score += amount;
+        UpdateScoreUI();
+    }
+
+    private void UpdateCoinUI()
+    {
+        text.SetText( AbbreviateNumber(coin) );
+    }
+
+    private void UpdateScoreUI()
+    {
+        scoreText.SetText( score.ToString() );
+    }
+
+    public void SaveCoin()
+    {
+        int totalCoin = PlayerPrefs.GetInt("TotalCoin", 0);
+        totalCoin += coin;
+        PlayerPrefs.SetInt("TotalCoin", totalCoin);
+        PlayerPrefs.Save();
     }
 
     public static string AbbreviateNumber(long num)
     {
-        if (num >= 1_000_000_000)
-            return (num / 1_000_000_000f).ToString("0.#") + "B";
-        if (num >= 1_000_000)
-            return (num / 1_000_000f).ToString("0.#") + "M";
-        if (num >= 1_000)
-            return (num / 1_000f).ToString("0.#") + "K";
+        if (num >= 1_000_000_000) return (num / 1_000_000_000f).ToString("0.#") + "B";
+        if (num >= 1_000_000)     return (num / 1_000_000f).ToString("0.#") + "M";
+        if (num >= 1_000)         return (num / 1_000f).ToString("0.#") + "K";
         return num.ToString();
     }
 
-    public void SetGameOver() {
+    public void SetGameOver()
+    {
         isGameOVer = true;
 
-        EnemySpawner enemySpawner = FindFirstObjectByType<EnemySpawner>();
-        if (enemySpawner != null) {
-            enemySpawner.StopEnemyRoutine();
-        }
+        var enemySpawner  = FindFirstObjectByType<EnemySpawner>();
+        var debrisSpawner = FindFirstObjectByType<DebrisSpawner>();
+        if (enemySpawner  != null) enemySpawner.StopEnemyRoutine();
+        if (debrisSpawner != null) debrisSpawner.StopDebrisRoutine();
 
-        DebrisSpawner debrisSpawner = FindFirstObjectByType<DebrisSpawner>();
-        if (enemySpawner != null) {
-            debrisSpawner.StopDebrisRoutine();
+        // 최고 점수 갱신
+        int highScore = PlayerPrefs.GetInt("HighScore", 0);
+        if (score > highScore) {
+            PlayerPrefs.SetInt("HighScore", score);
+            PlayerPrefs.Save();
         }
 
         SaveCoin();
-        Invoke("ShowGameOverPanel", 1f); // 1초뒤에 게임오버패널을 띄어줌
-        HideBossHpBar();
-
+        Invoke(nameof(ShowGameOverPanel), 1f);
+        bossHpSlider.gameObject.SetActive(false);
+        
     }
 
-
-    void ShowGameOverPanel() {
+    private void ShowGameOverPanel()
+    {
         gameOverPanel.SetActive(true);
+        Time.timeScale = 0f;
     }
 
-    public void PlayAgain() {
+    public void PlayAgain()
+    {
         SceneManager.LoadScene("Stage1");
     }
 
-    public void BackToMainMenu() {
+    public void BackToMainMenu()
+    {
         SceneManager.LoadScene("MainMenu");
     }
 
-    public void ShowBossHpBar(float maxHp) {
+    public void ShowBossHpBar(float maxHp)
+    {
         bossHpSlider.gameObject.SetActive(true);
         bossHpSlider.maxValue = maxHp;
-        bossHpSlider.value = maxHp;
+        bossHpSlider.value    = maxHp;
     }
 
-     public void UpdateBossHpBar(float currentHp) {
+    public void UpdateBossHpBar(float currentHp)
+    {
         bossHpSlider.value = currentHp;
     }
 
-    public void HideBossHpBar() {
+    public void HideBossHpBar()
+    {
         bossHpSlider.gameObject.SetActive(false);
     }
 
-
-
-    // 일시정지 메뉴 열기
-    public void OpenPauseMenu() {
+    public void OpenPauseMenu()
+    {
         pauseMenuPanel.SetActive(true);
-        Time.timeScale = 0f; // 게임 일시정지
+        Time.timeScale = 0f;
     }
 
-    // 일시정지 메뉴 닫기 (Resume)
-    public void ClosePauseMenu() {
+    public void ClosePauseMenu()
+    {
         pauseMenuPanel.SetActive(false);
-        Time.timeScale = 1f; // 게임 재개
+        Time.timeScale = 1f;
     }
 
-    // 메인메뉴로 돌아가기
     public void PauseBackToMainMenu()
     {
-        Time.timeScale = 1f; // 반드시 먼저 게임 재개 시키고 이동해야 함!
-        SceneManager.LoadScene("MainMenu");
-    }
-
-    public void OpenConfirmPanel() {
-        pauseMenuPanel.SetActive(false);
-        confirmPanel.SetActive(true);
-    }
-
-    // '예' 버튼: 메인메뉴로 이동
-    public void ConfirmYes() {
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
     }
 
-    // '아니요' 버튼: 다시 PauseMenuPanel로 복귀
-    public void ConfirmNo() {
+    public void OpenConfirmPanel()
+    {
+        pauseMenuPanel.SetActive(false);
+        confirmPanel.SetActive(true);
+    }
+
+    public void ConfirmYes()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void ConfirmNo()
+    {
         confirmPanel.SetActive(false);
         pauseMenuPanel.SetActive(true);
     }

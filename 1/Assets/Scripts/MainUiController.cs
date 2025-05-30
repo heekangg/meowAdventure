@@ -9,6 +9,7 @@ public class MainUiController : MonoBehaviour
     [SerializeField] GameObject optionsPanel;
 
     [SerializeField] TextMeshProUGUI totalCoinText;
+    [SerializeField] private TextMeshProUGUI highScoreText;
 
     public void OpenStagePanel() {
         stagePanel.SetActive(true);
@@ -40,6 +41,10 @@ public class MainUiController : MonoBehaviour
     {
         int totalCoin = PlayerPrefs.GetInt("TotalCoin", 0);
         totalCoinText.text = GameManager.AbbreviateNumber(totalCoin);
+
+        // 저장된 최고 점수 표시
+        int highScore = PlayerPrefs.GetInt("HighScore", 0);
+        highScoreText.text = highScore.ToString();
     }
 
     // Update is called once per frame

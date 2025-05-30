@@ -210,6 +210,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHp: 300
   explodingEffect: {fileID: 4801185326682452682, guid: e87494778e374b547b9f983457caa773, type: 3}
+  scoreValue: 100
   bossWeaponPrefab: {fileID: 2673426040062740973, guid: c0d178d661b9f1543aa53c9eafc08b73, type: 3}
   shootTransform: {fileID: 8209451239600337393}
   bossBulletSpeed: 5
