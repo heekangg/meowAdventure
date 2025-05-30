@@ -7,16 +7,24 @@ public class UfoController : MonoBehaviour
     [SerializeField] float speed  = 3f;
     [SerializeField] float stopY  = 3.74f;
 
-    [Header("References")]
-    [SerializeField] GameObject   laserEffect;         // 기존 레이저 이펙트
-    [SerializeField] Animator      laserAnimator;       // 레이저 Animator
-    [SerializeField] CanvasGroup   titleCanvasGroup;    // TitleUI에 추가한 CanvasGroup
+    [Header("Laser Settings")]
+    [SerializeField] private GameObject laserPrefab;
+    [SerializeField] private Transform laserSpawner;
 
-    bool hasStopped = false;
+    [Header("Title UI")]
+    [SerializeField] private CanvasGroup titleCanvasGroup;
+
+    private bool hasStopped = false;
+    private GameObject laserInstance;
+    private Animator laserAnimator;
 
     void Start()
     {
-        laserEffect.SetActive(false);
+
+        // 1) 레이저 프리팹 인스턴스화 후 비활성화
+        laserInstance = Instantiate(laserPrefab, laserSpawner.position, laserSpawner.rotation);
+        laserAnimator = laserInstance.GetComponent<Animator>();
+        laserInstance.SetActive(false);
         titleCanvasGroup.alpha           = 0f;
         titleCanvasGroup.interactable    = false;
         titleCanvasGroup.blocksRaycasts  = false;
@@ -33,7 +41,10 @@ public class UfoController : MonoBehaviour
             hasStopped = true;
             transform.position = new Vector3(transform.position.x, stopY, transform.position.z);
 
-            laserEffect.SetActive(true);
+            laserInstance.transform.position = laserSpawner.position;
+            laserInstance.transform.rotation = laserSpawner.rotation;
+
+            laserInstance.SetActive(true);
             laserAnimator.Play("laser", 0, 0f);
 
             StartCoroutine(WaitForLaserEndAndFadeInTitle());
